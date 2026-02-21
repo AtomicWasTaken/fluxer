@@ -55,8 +55,9 @@ export function renderMarketingDocument(options: RenderMarketingDocumentOptions)
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				{buildMetaTags(options.ctx, options.pageMeta, pageUrl)}
 				<title>{options.pageMeta.title}</title>
-				<link rel="preconnect" href="https://fluxerstatic.com" />
-				<link rel="stylesheet" href="https://fluxerstatic.com/fonts/ibm-plex.css" />
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+				<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet" />
 				<link rel="stylesheet" href="https://fluxerstatic.com/fonts/bricolage.css" />
 				<link rel="stylesheet" href={cacheBustedAsset(options.ctx, '/static/app.css')} />
 				{buildIconLinks(options.ctx.staticCdnEndpoint)}
