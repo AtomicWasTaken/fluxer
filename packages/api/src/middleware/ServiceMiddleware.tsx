@@ -32,6 +32,7 @@ import {SsoService} from '@fluxer/api/src/auth/services/SsoService';
 import {BlueskyOAuthService} from '@fluxer/api/src/bluesky/BlueskyOAuthService';
 import type {IBlueskyOAuthService} from '@fluxer/api/src/bluesky/IBlueskyOAuthService';
 import {Config} from '@fluxer/api/src/Config';
+import {Logger} from '@fluxer/api/src/Logger';
 import {ChannelRepository} from '@fluxer/api/src/channel/ChannelRepository';
 import {ChannelRequestService} from '@fluxer/api/src/channel/services/ChannelRequestService';
 import {ChannelService} from '@fluxer/api/src/channel/services/ChannelService';
@@ -545,7 +546,15 @@ export const ServiceMiddleware = createMiddleware<HonoEnv>(async (ctx, next) => 
 	const injectedBlueskyOAuth = getInjectedBlueskyOAuthService();
 	let blueskyOAuthService: IBlueskyOAuthService | null = injectedBlueskyOAuth ?? null;
 	if (!blueskyOAuthService && Config.auth.bluesky.enabled) {
-		blueskyOAuthService = await BlueskyOAuthService.create(Config.auth.bluesky, kvClient, Config.endpoints.apiPublic);
+		if (Config.endpoints.apiPublic.startsWith('http://')) {
+			Logger.warn('Bluesky OAuth requires HTTPS — skipping initialization in HTTP mode');
+		} else {
+			blueskyOAuthService = await BlueskyOAuthService.create(
+				Config.auth.bluesky,
+				kvClient,
+				Config.endpoints.apiPublic,
+			);
+		}
 	}
 
 	const connectionService = new ConnectionService(connectionRepository, gatewayService, blueskyOAuthService);

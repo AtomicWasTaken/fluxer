@@ -1,6 +1,7 @@
 [tools]
 node = "24"
 erlang = "28"
+rebar = "3"
 rust = "1.93.0"
 go = "1.24"
 python = "3"

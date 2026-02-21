@@ -54,7 +54,7 @@
 			"private_key": ""
 		},
 		"bluesky": {
-			"enabled": true,
+			"enabled": false,
 			"keys": []
 		}
 	},
