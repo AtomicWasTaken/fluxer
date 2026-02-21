@@ -228,7 +228,19 @@ class RuntimeConfigStore {
 				'relayDirectoryUrl',
 			]);
 
-			const bootstrapEndpoint = this.apiEndpoint || Config.PUBLIC_BOOTSTRAP_API_ENDPOINT;
+			let bootstrapEndpoint = this.apiEndpoint || Config.PUBLIC_BOOTSTRAP_API_ENDPOINT;
+
+		// Align persisted endpoint protocol with the current page to avoid
+		// HTTPS requests when running on HTTP (e.g. local development).
+		if (bootstrapEndpoint.startsWith('http')) {
+			try {
+				const persisted = new URL(bootstrapEndpoint);
+				if (persisted.hostname === window.location.hostname) {
+					persisted.protocol = window.location.protocol;
+					bootstrapEndpoint = persisted.toString();
+				}
+			} catch {}
+		}
 
 			await this.connectToEndpoint(bootstrapEndpoint);
 

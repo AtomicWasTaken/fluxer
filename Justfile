@@ -39,11 +39,17 @@ apps:
     export FLUXER_CONFIG="{{repo_root}}/config/config.json"
     export FLUXER_DATABASE="${FLUXER_DATABASE:-sqlite}"
 
+    # Wait for infrastructure services to be ready
+    echo "Waiting for infrastructure services..."
+    for i in $(seq 1 30); do
+        if curl -sf http://127.0.0.1:6379 2>&1 | grep -q 'ERR\|PONG\|wrong' || redis-cli -h 127.0.0.1 -p 6379 ping 2>/dev/null | grep -q PONG; then
+            break
+        fi
+        sleep 1
+    done
+
     echo "Starting fluxer_server..."
     pnpm --filter fluxer_server dev > dev/logs/fluxer_server.log 2>&1 &
-
-    echo "Starting fluxer_app..."
-    FORCE_COLOR=1 FLUXER_APP_DEV_PORT=49427 pnpm --filter fluxer_app dev > dev/logs/fluxer_app.log 2>&1 &
 
     echo "Starting fluxer_gateway..."
     ./scripts/dev_gateway.sh > dev/logs/fluxer_gateway.log 2>&1 &
@@ -54,8 +60,21 @@ apps:
     echo "Starting css_watch..."
     ./scripts/dev_css_watch.sh > dev/logs/css_watch.log 2>&1 &
 
+    # Wait for backend server to be ready before starting Caddy and the frontend
+    echo "Waiting for backend server..."
+    for i in $(seq 1 60); do
+        if curl -sf http://127.0.0.1:49319/_health > /dev/null 2>&1; then
+            echo "Backend server is ready."
+            break
+        fi
+        sleep 1
+    done
+
     echo "Starting caddy..."
     caddy run --config dev/Caddyfile.dev --adapter caddyfile > dev/logs/caddy.log 2>&1 &
+
+    echo "Starting fluxer_app..."
+    FORCE_COLOR=1 FLUXER_APP_DEV_PORT=49427 pnpm --filter fluxer_app dev > dev/logs/fluxer_app.log 2>&1 &
 
     echo "All app processes started. Logs in dev/logs/. Press Ctrl+C to stop."
     wait
