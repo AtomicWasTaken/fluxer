@@ -71,26 +71,30 @@ TBD
 - [Valkey](https://valkey.io/) (Redis-compatible) for caching, rate limiting, and ephemeral coordination
 - [LiveKit](https://livekit.io/) for voice and video infrastructure
 
-### Devenv development environment
+### Development environment
 
-Fluxer supports development through **devenv** only. It provides a reproducible Nix environment and a single, declarative process manager for the dev stack. If you need a different setup, it is currently unsupported.
+Fluxer uses [mise](https://mise.jdx.dev/) for tool version management, [Docker Compose](https://docs.docker.com/compose/) for infrastructure services, and [just](https://github.com/casey/just) as a task runner.
 
-1. Install Nix and devenv using the [devenv getting started guide](https://devenv.sh/getting-started/).
-2. Enter the environment:
+#### Prerequisites
+
+1. Install [mise](https://mise.jdx.dev/getting-started.html), [Docker](https://docs.docker.com/get-docker/), and [just](https://github.com/casey/just#installation).
+2. Install tool versions:
 
 ```bash
-devenv shell
+mise install
 ```
 
-If you use direnv, the repo includes a `.envrc` that loads devenv automatically – run `direnv allow` once.
+If you use direnv, the repo includes a `.envrc` that activates mise automatically – run `direnv allow` once.
 
 ### Getting started
 
 Start all services and the development server with:
 
 ```bash
-devenv up
+just dev
 ```
+
+This runs bootstrap (generates config and secrets), starts infrastructure via Docker Compose, and launches all app processes.
 
 Open the instance in a browser at your dev server URL (e.g. `http://localhost:48763/`).
 

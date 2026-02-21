@@ -15,7 +15,7 @@ Fluxer is a free, open-source instant messaging and VoIP platform (similar to Di
 | Typecheck all | `pnpm typecheck` (uses `tsgo`, not `tsc`) |
 | Test all | `pnpm test` |
 | Integration tests | `pnpm test:integration` |
-| Start dev environment | `devenv up` |
+| Start dev environment | `just dev` |
 | Test single package | `pnpm --filter @fluxer/schema test` |
 | Run single test file | `pnpm --filter @fluxer/schema exec vitest run src/path/to/test.test.ts` |
 | Docs dev server | `pnpm dev:docs` |
@@ -76,7 +76,7 @@ Driven by `FLUXER_CONFIG` env var pointing to a JSON file. Template: `config/con
 
 ## Development environment
 
-Development uses **devenv (Nix) only**. Run `devenv shell` to enter the environment, `devenv up` to start all services. The `.envrc` supports direnv. Dev instance at `http://localhost:48763/`, dev email inbox at `http://localhost:48763/mailpit/`.
+Development uses **mise** (tool version manager) + **Docker Compose** (infrastructure services) + **just** (task runner). Run `mise install` to install tool versions, `just dev` to bootstrap and start all services. The `.envrc` supports direnv with mise. Dev instance at `http://localhost:48763/`, dev email inbox at `http://localhost:48763/mailpit/`.
 
 ## Code style
 

@@ -1,0 +1,17 @@
+[tools]
+node = "24"
+erlang = "28"
+rust = "1.93.0"
+go = "1.24"
+python = "3"
+jq = "latest"
+"github:caddyserver/caddy" = "latest"
+"npm:pnpm" = "latest"
+"cargo:wasm-pack" = "latest"
+
+[env]
+FLUXER_CONFIG = "{{config_root}}/config/config.json"
+FLUXER_DATABASE = "sqlite"
+
+[settings]
+experimental = true

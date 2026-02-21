@@ -13,7 +13,7 @@ shift
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
 
-runtime_dir="${DEVENV_RUNTIME:-${XDG_RUNTIME_DIR:-/tmp}}"
+runtime_dir="${XDG_RUNTIME_DIR:-/tmp}"
 lock_dir="${runtime_dir}/fluxer_dev_bootstrap.lock"
 stamp_file="${runtime_dir}/fluxer_dev_bootstrap.done"
 
