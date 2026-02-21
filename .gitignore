@@ -19,6 +19,7 @@
 **/.devenv
 .devenv.flake.nix
 devenv.local.nix
+.mise.local.toml
 **/.direnv
 /dev/livekit.yaml
 /dev/bluesky_oauth_key.pem

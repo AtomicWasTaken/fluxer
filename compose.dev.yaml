@@ -1,0 +1,63 @@
+services:
+  valkey:
+    image: valkey/valkey:8-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - valkey_data:/data
+    restart: unless-stopped
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    ports:
+      - "127.0.0.1:7700:7700"
+    environment:
+      MEILI_ENV: development
+      MEILI_NO_ANALYTICS: "true"
+    entrypoint: ["/bin/sh", "-c", "export MEILI_MASTER_KEY=$(cat /run/secrets/meili_key 2>/dev/null || echo 'dev-master-key') && exec meilisearch"]
+    volumes:
+      - meilisearch_data:/meili_data
+      - ./dev/meilisearch_master_key:/run/secrets/meili_key:ro
+    restart: unless-stopped
+
+  nats_core:
+    image: nats:2-alpine
+    command: ["-p", "4222", "-a", "0.0.0.0"]
+    ports:
+      - "127.0.0.1:4222:4222"
+    restart: unless-stopped
+
+  nats_jetstream:
+    image: nats:2-alpine
+    command: ["-p", "4223", "-js", "-sd", "/data", "-a", "0.0.0.0"]
+    ports:
+      - "127.0.0.1:4223:4223"
+    volumes:
+      - nats_jetstream_data:/data
+    restart: unless-stopped
+
+  livekit:
+    image: livekit/livekit-server:latest
+    ports:
+      - "127.0.0.1:7880:7880"
+      - "127.0.0.1:7881:7881"
+      - "3478:3478/udp"
+      - "50000-50100:50000-50100/udp"
+    volumes:
+      - ./dev/livekit.yaml:/etc/livekit.yaml:ro
+    command: ["--config", "/etc/livekit.yaml"]
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "127.0.0.1:49667:8025"
+      - "127.0.0.1:49621:1025"
+    command: ["--webroot", "/mailpit/"]
+    restart: unless-stopped
+
+
+volumes:
+  valkey_data:
+  meilisearch_data:
+  nats_jetstream_data:
