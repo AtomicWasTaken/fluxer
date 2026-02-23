@@ -21,7 +21,8 @@
 	"services": {
 		"server": {
 			"port": 8080,
-			"host": "0.0.0.0"
+			"host": "0.0.0.0",
+			"static_dir": "/usr/src/app/assets"
 		},
 		"media_proxy": {
 			"secret_key": "GENERATE_A_64_CHAR_HEX_SECRET"
@@ -41,8 +42,7 @@
 		},
 		"nats": {
 			"core_url": "nats://nats:4222",
-			"jetstream_url": "nats://nats:4222",
-			"auth_token": "GENERATE_A_NATS_AUTH_TOKEN"
+			"jetstream_url": "nats://nats:4222"
 		}
 	},
 	"auth": {
